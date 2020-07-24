@@ -1,1 +1,0 @@
-{"train_rewards": [[1, -858.1832885742188], [101, -3076.6832580566406], [201, -3076.6832580566406]], "eval_rewards": [{"total_steps": 0, "train_steps": 0, "average_eval_reward": -2307.0183197021483, "eval_reward_variance": 11613.310364790428}], "actor_losses": [], "value_losses": [], "critic_losses": []}
