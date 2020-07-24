@@ -94,7 +94,7 @@ def create_argument_parser():
         help='dual parameter beta for normalizing actions'
     )
     parser.add_argument(
-        '--num_steps', type=int, default=5000, metavar='N',
+        '--num_steps', type=int, default=500000, metavar='N',
         help='number of training steps to play the environments game'
     )
     return parser

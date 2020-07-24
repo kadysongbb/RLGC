@@ -130,7 +130,6 @@ class GACAgent:
             None
         """
         # transitions is sampled from replay buffer
-        print('train_one_step is called')
         transitions = self.replay.sample_batch(self.batch_size)
         state_batch = normalize(transitions.s, self.obs_rms)
         action_batch = transitions.a
