@@ -46,8 +46,6 @@ lr = 1e-3
     
 agent = DRTRPOAgent(env, gamma, lr)
 
-############################### MC Updates  (Full Episode) ###############################
-
 # Define training parameters
 max_episodes = 20
 max_steps = 1000
@@ -87,11 +85,6 @@ for episode in range(max_episodes):
         total_value_loss += value_loss
     
     avg_episode_reward = episode_reward/env.action_space.n
-    # # add randomness for better exploration 
-    # if(state_adv[0] == state_adv[1]) and (state_adv[1] == state_adv[2]) and avg_episode_reward < -490:
-    #     state_adv[0] += (np.random.random()-0.5)*2
-    #     state_adv[1] += (np.random.random()-0.5)*2
-    #     state_adv[2] += (np.random.random()-0.5)*2
         
     total_adv_diff += max(abs(state_adv[1] - state_adv[0]), abs(state_adv[2] - state_adv[0]), abs(state_adv[2] - state_adv[1]))
     beta = total_adv_diff/episode
