@@ -3,9 +3,9 @@ import numpy as np
 import tensorflow as tf
 
 # import local dependencies
-from GAC.networks import StochasticActor, AutoRegressiveStochasticActor,  Critic, Value
-from GAC.helpers import ReplayBuffer, update, ActionSampler, normalize, denormalize
-from utils.utils import RunningMeanStd
+from odrpo.GAC.networks import StochasticActor, AutoRegressiveStochasticActor,  Critic, Value
+from odrpo.GAC.helpers import ReplayBuffer, update, ActionSampler, normalize, denormalize
+from odrpo.utils.utils import RunningMeanStd
 
 
 """

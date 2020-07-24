@@ -4,7 +4,7 @@ import torch.optim as optim
 from torch.distributions import Categorical
 import numpy as np
 
-from models import ValueNetwork, PolicyNetwork
+from odrpo.models import ValueNetwork, PolicyNetwork
 
 
 class DRTRPOAgent():

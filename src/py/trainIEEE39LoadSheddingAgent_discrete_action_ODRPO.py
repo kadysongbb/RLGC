@@ -1,4 +1,3 @@
-
 from py4j.java_gateway import JavaGateway
 from py4j.java_gateway import GatewayParameters
 
@@ -14,7 +13,7 @@ from gym import wrappers
 from datetime import datetime
 import time
 import json
-from drpo import DRTRPOAgent 
+from odrpo.drpo import DRTRPOAgent 
 from PowerDynSimEnvDef_v5 import PowerDynSimEnv
 
 
@@ -111,7 +110,7 @@ for episode in range(max_episodes):
     results_dict['train_rewards'].append(
         (total_timesteps, avg_episode_reward))
 
-    with open('results.txt', 'w') as file:
+    with open('odrpo_ieee_discrete_results.txt', 'w') as file:
         file.write(json.dumps(results_dict))
 
     agent.update(value_loss, policy_loss)

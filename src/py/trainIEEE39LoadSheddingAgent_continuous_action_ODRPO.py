@@ -7,13 +7,13 @@ import numpy as np
 import tensorflow as tf
 from tqdm import trange
 
-import utils.utils as utils
-from noises.ounoise import NormalActionNoise, OrnsteinUhlenbeckActionNoise
-from environment.wapper import Wrapper
-from GAC.networks import AutoRegressiveStochasticActor as AIQN
-from GAC.networks import StochasticActor as IQN
-from GAC.networks import Critic, Value
-from GAC.agent import GACAgent
+import odrpo.utils.utils as utils
+from odrpo.noises.ounoise import NormalActionNoise, OrnsteinUhlenbeckActionNoise
+from odrpo.environment.wapper import Wrapper
+from odrpo.GAC.networks import AutoRegressiveStochasticActor as AIQN
+from odrpo.GAC.networks import StochasticActor as IQN
+from odrpo.GAC.networks import Critic, Value
+from odrpo.GAC.agent import GACAgent
 
 # RLGC
 from py4j.java_gateway import JavaGateway
@@ -30,7 +30,7 @@ import matplotlib.pyplot as plt
 from gym import wrappers
 from datetime import datetime
 import time
-from drpo import DRTRPOAgent 
+from odrpo.drpo import DRTRPOAgent 
 from PowerDynSimEnvDef_v5 import PowerDynSimEnv
 
 
@@ -239,7 +239,7 @@ def main():
                     results_dict['train_rewards'].append(
                         (total_steps, episode_rewards)
                     )
-                    with open('results.txt', 'w') as file:
+                    with open('odrpo_ieee_continuous_results.txt', 'w') as file:
                         file.write(json.dumps(results_dict))
                     episode_steps = 0
                     episode_rewards = 0
@@ -261,7 +261,7 @@ def main():
                         'average_eval_reward': eval_reward,
                         'eval_reward_variance': eval_variance
                     })
-                    with open('results.txt', 'w') as file:
+                    with open('odrpo_ieee_continuous_results.txt', 'w') as file:
                         file.write(json.dumps(results_dict))
                 total_steps += 1
             # train
@@ -270,7 +270,7 @@ def main():
                     gac.train_one_step()
                     train_steps += 1
 
-    with open('results.txt', 'w') as file:
+    with open('odrpo_ieee_continuous_results.txt', 'w') as file:
         file.write(json.dumps(results_dict))
 
     utils.save_model(gac.actor, base_dir)

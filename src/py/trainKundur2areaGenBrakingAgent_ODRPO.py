@@ -1,4 +1,3 @@
-
 from py4j.java_gateway import JavaGateway
 from py4j.java_gateway import GatewayParameters
 
@@ -6,6 +5,7 @@ import os
 import os.path
 import gym
 import sys
+import json
 import numpy as np
 import tensorflow as tf
 import matplotlib
@@ -14,18 +14,23 @@ import matplotlib.pyplot as plt
 from gym import wrappers
 from datetime import datetime
 import time
-from drpo import DRTRPOAgent 
-from PowerDynSimEnvDef_v5 import PowerDynSimEnv
+from odrpo.drpo import DRTRPOAgent 
+from PowerDynSimEnvDef_v7 import PowerDynSimEnv
 
 
-java_port = 25332
-jar_file = "/lib/RLGCJavaServer0.89.jar"
+np.random.seed(19)
 
-a = os.path.abspath(os.path.dirname(__file__))
+# config the RLGC Java Sever
+java_port = 25003
+jar_file = '/lib/RLGCJavaServer0.93.jar'
+
 # This is to fix the issue of "ModuleNotFoundError" below
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))  
 
+
+a = os.path.abspath(os.path.dirname(__file__))
 folder_dir = a[:-7]
+
 jar_path = folder_dir + jar_file
 
 case_files_array = []
@@ -40,6 +45,7 @@ rl_config_file = folder_dir+'/testData/Kundur-2area/json/kundur2area_RL_config_m
 
 env = PowerDynSimEnv(case_files_array,dyn_config_file,rl_config_file,jar_path,java_port)
 
+
 # Check agent class for initialization parameters and initialize agent
 gamma = 0.99
 lr = 1e-3
@@ -52,8 +58,16 @@ max_steps = 1000
 total_adv_diff = 0
 
 episode_rewards = []
-run_time = []
-start_time = time.time()
+
+results_dict = {
+    'train_rewards': [],
+    'eval_rewards': [],
+    'actor_losses': [],
+    'value_losses': [],
+    'critic_losses': []
+}
+total_timesteps = 0
+
 for episode in range(max_episodes):
     if episode == 0:
         first_state = env.reset()
@@ -86,15 +100,19 @@ for episode in range(max_episodes):
     
     avg_episode_reward = episode_reward/env.action_space.n
         
-    total_adv_diff += max(abs(state_adv[1] - state_adv[0]), abs(state_adv[2] - state_adv[0]), abs(state_adv[2] - state_adv[1]))
+    total_adv_diff += abs(state_adv[1] - state_adv[0])
     beta = total_adv_diff/episode
     beta += 0.1
     policy_loss = agent.compute_policy_loss_wass(first_state, state_adv, beta)
+    total_timesteps += step * env.action_space.n
+
+    results_dict['train_rewards'].append(
+        (total_timesteps, avg_episode_reward))
+
+    with open('odrpo_kundur_results.txt', 'w') as file:
+        file.write(json.dumps(results_dict))
 
     agent.update(value_loss, policy_loss)
-    elapse = time.time() - start_time
-    run_time.append(elapse)
     
     episode_rewards.append(avg_episode_reward)
     print("Episode " + str(episode) + ": " + str(avg_episode_reward))
-    print("Timesteps in the episode: " + str(step))
