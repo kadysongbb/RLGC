@@ -50,6 +50,7 @@ env = PowerDynSimEnv(case_files_array,dyn_config_file,rl_config_file, jar_path, 
 # Check agent class for initialization parameters and initialize agent
 gamma = 0.99
 lr = 1e-3
+beta = 0.8
     
 agent = DRTRPOAgent(env, gamma, lr)
 
@@ -101,10 +102,12 @@ for episode in range(max_episodes):
     
     avg_episode_reward = episode_reward/env.action_space.n
 
-    total_adv_diff += max(abs(state_adv[1] - state_adv[0]), abs(state_adv[2] - state_adv[0]), abs(state_adv[2] - state_adv[1]))
-    beta = total_adv_diff/episode
-    beta += 0.1
-    policy_loss = agent.compute_policy_loss_wass(first_state, state_adv, beta)
+    # add randomness for better exploration
+    beta += np.random.random()*0.1
+    if (state_adv[0] == state_adv[1]) and avg_episode_reward  <= -2000:
+        state_adv[0] += (np.random.random()-0.5)*2
+        state_adv[1] += (np.random.random()-0.5)*2
+    policy_loss = agent.compute_policy_loss_kl(first_state, state_adv, beta)
     total_timesteps += step * env.action_space.n
 
     results_dict['train_rewards'].append(

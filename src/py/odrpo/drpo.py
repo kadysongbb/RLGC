@@ -31,6 +31,9 @@ class DRTRPOAgent():
         state = torch.FloatTensor(state).to(self.device)
         logits = self.policy_network.forward(state)
         dist = logits
+        # Fix NaN issue (happens when the softmax in the policy network overflows)
+        if np.isnan(dist.detach().numpy()).any():
+            return  np.random.choice(len(dist))
         probs = Categorical(dist)
         return probs.sample().cpu().detach().item()
 
