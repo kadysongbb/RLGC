@@ -30,11 +30,11 @@ jar_path = folder_dir + jar_file
 
 case_files_array = []
 
-case_files_array.append(folder_dir + '/testData/Kundur-2area/kunder_2area_ver30.raw')
-case_files_array.append(folder_dir + '/testData/Kundur-2area/kunder_2area.dyr')
+case_files_array.append(folder_dir +'/testData/Kundur-2area/kunder_2area_ver30.raw')
+case_files_array.append(folder_dir+'/testData/Kundur-2area/kunder_2area.dyr')
 
 dyn_config_file = folder_dir+'/testData/Kundur-2area/json/kundur2area_dyn_config.json'
-# rl_config_file = 'testData\\Kundur-2area\\json\\kundur2area_RL_config.json'
+
 rl_config_file = folder_dir+'/testData/Kundur-2area/json/kundur2area_RL_config_multiStepObsv.json'
 
 
@@ -47,7 +47,7 @@ lr = 1e-3
 agent = DRTRPOAgent(env, gamma, lr)
 
 # Define training parameters
-max_episodes = 20
+max_episodes = 50
 max_steps = 1000
 total_adv_diff = 0
 
