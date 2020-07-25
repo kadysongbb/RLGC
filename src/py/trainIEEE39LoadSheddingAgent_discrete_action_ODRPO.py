@@ -47,10 +47,14 @@ model_name = "IEEE39_multistep_obs11_randftd3_randbus3_3motor2action_prenull"
 
 env = PowerDynSimEnv(case_files_array,dyn_config_file,rl_config_file, jar_path, java_port)
 
-# Check agent class for initialization parameters and initialize agent
+"""
+When the learning rate is large, neural network overflows and leads to NaNs. 
+Reducing lr or increasing beta can lower the learning rate and solve this issue.
+"""
+
 gamma = 0.99
-lr = 1e-3
-beta = 0.8
+lr = 1e-6
+beta = 50
     
 agent = DRTRPOAgent(env, gamma, lr)
 
